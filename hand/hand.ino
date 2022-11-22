@@ -40,8 +40,8 @@ long getForce(int fsrReading) {
 }
 
 void setup(void) {
-	Serial.begin(9600);   // We'll send debugging information via the Serial monitor
-	Serial.setTimeout(0.05);
+	Serial.begin(115200);   // We'll send debugging information via the Serial monitor
+	Serial.setTimeout(0.5);
 
 	for (int i = 0; i < 5; i++) {
 		pinMode(finger_pins[i], OUTPUT);
@@ -54,9 +54,6 @@ void setup(void) {
 	pinky.attach(2);
 }
 
-int i = 0;
-int d = 1;
-
 void loop(void) {
 	for (int i = 0; i < 5; i++) {
 		Serial.print(readFinger(i));
@@ -66,12 +63,8 @@ void loop(void) {
 	}
 	Serial.println();
 
-	i += d;
-	if ((i == 0 && d == -1) || (i == 254 && d == 1)) {
-		d *= -1;
-	}
-
 	String poses = Serial.readString();
+  Serial.println(poses.length());
 	if (poses.length() == 19) {
 		int thumbPose = poses.substring(0, 3).toInt();
 		int pointerPose = poses.substring(4, 7).toInt();
@@ -79,17 +72,11 @@ void loop(void) {
 		int ringPose = poses.substring(12, 15).toInt();
 		int pinkyPose = poses.substring(16, 19).toInt();
 
-		/*thumb.write(map(i, 0, 254, 50, 120));
-		pointer.write(map(i, 0, 254, 130, 80));
-		middle.write(map(i, 0, 254, 60, 120));
-		ring.write(map(i, 0, 254, 40, 100));
-		pinky.write(map(i, 0, 254, 130, 80));*/
-
 		thumb.write(map(thumbPose, 0, 254, 50, 120));
-		pointer.write(map(pointerPose, 0, 254, 130, 80));
-		middle.write(map(middlePose, 0, 254, 60, 120));
-		ring.write(map(ringPose, 0, 254, 40, 100));
-		pinky.write(map(pinkyPose, 0, 254, 130, 80));
+		pointer.write(map(pointerPose, 0, 254, 130, 30));
+		middle.write(map(middlePose, 0, 254, 60, 160));
+		ring.write(map(ringPose, 0, 254, 40, 140));
+		pinky.write(map(pinkyPose, 0, 254, 130, 30));
 	}
 	
 	delay(10);
