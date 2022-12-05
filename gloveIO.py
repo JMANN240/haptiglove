@@ -9,25 +9,51 @@ RING = 3
 PINKY = 4
 PALM = 5
 
-ser = serial.Serial('COM11', 115200)
+ser = serial.Serial('COM4', 115200)
+ser.flush()
 
 def get_pressure_data():
 	# Captures sensor data from pressure sensors 
 	try:
 		data = ser.readline().decode()
-		pressures = [(float(n)/350.0)**(1/6) for n in data.split(',')]
+		pressures = [(float(n)/60)**(1/2) for n in data.split(',')]
 	except:
 		pressures = [0,0,0,0,0]
+	print("""
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	 """)
+	print(pressures)
+	print(""" 
+	
+	
+	
+	
+	
+	
+	
+	""")
+
 	return pressures
 
 def update_haptics(datagloveIO, normalizedPressureData):
 	# Sends haptics to glove
 	# Forte_SendHaptic(leftHand, 4, 0, 1.0)
-	Forte_SendHaptic(datagloveIO, THUMB, 0, normalizedPressureData[0])
-	Forte_SendHaptic(datagloveIO, INDEX, 0, normalizedPressureData[1])
-	Forte_SendHaptic(datagloveIO, MIDDLE, 0, normalizedPressureData[2])
-	Forte_SendHaptic(datagloveIO, RING, 0, normalizedPressureData[3])
-	Forte_SendHaptic(datagloveIO, PINKY, 0, normalizedPressureData[4])
+	pass
+	# if (len(normalizedPressureData) == 5):
+
+	# 	Forte_SendHaptic(datagloveIO, THUMB, 0, normalizedPressureData[0])
+	# 	Forte_SendHaptic(datagloveIO, INDEX, 0, normalizedPressureData[1])
+	# 	Forte_SendHaptic(datagloveIO, MIDDLE, 0, normalizedPressureData[2])
+	# 	Forte_SendHaptic(datagloveIO, RING, 0, normalizedPressureData[3])
+	# 	Forte_SendHaptic(datagloveIO, PINKY, 0, normalizedPressureData[4])
 
 def send_sensors():
 	# [0, -16, 16, 23, 104, 115, 127, 86, 63, 116]
@@ -40,6 +66,7 @@ def send_sensors():
 		thumb = sensors[4] + sensors[5]
 		index = sensors[6] + sensors[7]
 		middle = sensors[8] + sensors[9]
+		
 		print(sensors)
 
 		# Forte_DestroyDataGloveIO(leftHand)
@@ -53,6 +80,7 @@ def send_sensors():
 	except:
 		print("Glove is Disconnected")
 
+i = 0
 
 if __name__ == '__main__':
 
@@ -67,4 +95,5 @@ if __name__ == '__main__':
 			Forte_DestroyDataGloveIO(leftHand)
 			ser.close()
 			exit()
-		# sleep(0.05)
+		i += 1
+		sleep(0.05)
