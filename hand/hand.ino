@@ -8,11 +8,9 @@ Servo pinky;
 
 int finger_pins[] = {9, 10, 11, 12, 13};
 
-int readFinger(int index) {
-	digitalWrite(finger_pins[index], HIGH);
+int readFinger() {
 	int reading = analogRead(0);
-	digitalWrite(finger_pins[index], LOW);
-	return reading;
+	return getForce(reading);
 }
 
 long getForce(int fsrReading) {
@@ -55,8 +53,9 @@ void setup(void) {
 }
 
 void loop(void) {
+  int reading = readFinger();
 	for (int i = 0; i < 5; i++) {
-		Serial.print(readFinger(i));
+		Serial.print(reading);
 		if (i < 4) {
 			Serial.print(',');
 		}
@@ -64,7 +63,6 @@ void loop(void) {
 	Serial.println();
 
 	String poses = Serial.readString();
-  Serial.println(poses.length());
 	if (poses.length() == 19) {
 		int thumbPose = poses.substring(0, 3).toInt();
 		int pointerPose = poses.substring(4, 7).toInt();
